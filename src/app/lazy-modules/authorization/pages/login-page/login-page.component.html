@@ -1,0 +1,8 @@
+<form class="form" [formGroup]="form" (ngSubmit)="onSubmit()">
+  <app-input formControlName="email" label="Почта"></app-input>
+  <app-input formControlName="password" label="Пароль"></app-input>
+  <app-button type="submit" [disabled]="formEnable || form.invalid"
+    >логин</app-button
+  >
+</form>
+<app-button (buttonClick)="goToRegistration()">регистрация</app-button>

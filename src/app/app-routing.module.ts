@@ -1,10 +1,35 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { RoutingConstants } from './shared/constants/routing.constants';
+import { AuthGuard } from './shared/guards/auth.guard';
 
-const routes: Routes = [];
+const routes: Routes = [
+  {
+    path: RoutingConstants.MAIN,
+    loadChildren: () =>
+      import('./lazy-modules/main/main.module').then((m) => m.MainModule),
+    canActivate: [AuthGuard],
+  },
+  {
+    path: RoutingConstants.AUTH,
+    loadChildren: () =>
+      import('./lazy-modules/authorization/authorization.module').then(
+        (m) => m.AuthorizationModule
+      ),
+  },
+  {
+    path: 'posts',
+    loadChildren: () =>
+      import('./lazy-modules/posts/posts.module').then((m) => m.PostsModule),
+  },
+  {
+    path: '**',
+    redirectTo: RoutingConstants.MAIN,
+  },
+];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

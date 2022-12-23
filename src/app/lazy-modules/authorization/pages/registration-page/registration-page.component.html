@@ -1,0 +1,12 @@
+<form class="form" [formGroup]="form" (ngSubmit)="onSubmit()">
+  <app-input formControlName="email" label="Почта"></app-input>
+  <app-input formControlName="password" label="Пароль"></app-input>
+  <app-input
+    formControlName="repeatPassword"
+    label="Повторить пароль"
+  ></app-input>
+  <app-button type="submit" [disabled]="formEnable || form.invalid"
+    >зарегистрироваться</app-button
+  >
+</form>
+<app-button (buttonClick)="goToLogin()">залогинеться</app-button>

@@ -1,10 +1,17 @@
 import { Directive, OnDestroy, OnInit, Optional } from '@angular/core';
-import { ControlValueAccessor, FormControl, NgControl } from '@angular/forms';
+import {
+  ControlValueAccessor,
+  FormControl,
+  NgControl,
+  Validators,
+} from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
 
 @Directive()
 export class BaseControl implements OnInit, OnDestroy, ControlValueAccessor {
   public formControl = new FormControl();
+
+  public required: boolean | undefined;
 
   private destroy$ = new Subject<void>();
 
@@ -14,6 +21,7 @@ export class BaseControl implements OnInit, OnDestroy, ControlValueAccessor {
 
   public ngOnInit(): void {
     this.onInputValueChanges();
+    this.required = this.ngControl.control?.hasValidator(Validators.required);
   }
 
   public ngOnDestroy(): void {

@@ -1,0 +1,5 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <app-input formControlName="name" label="название"></app-input>
+  <app-button type="submit">сохранить</app-button>
+  <app-button (buttonClick)="back()">отмена</app-button>
+</form>
