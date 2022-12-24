@@ -15,6 +15,11 @@ const routes: Routes = [
             (m) => m.CategoriesModule
           ),
       },
+      {
+        path: RoutingConstants.POSTS,
+        loadChildren: () =>
+          import('../posts/posts.module').then((m) => m.PostsModule),
+      },
     ],
   },
 ];

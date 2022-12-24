@@ -1,5 +1,5 @@
 import { createAction, props } from '@ngrx/store';
-import { Post, PostMap } from '../../shared/interfaces/post.interface';
+import { Post, PostMap, CreatePost } from '../../shared/interfaces/post.interface';
 
 export const initPostsStoreAction = createAction('[POSTS] init posts');
 
@@ -20,7 +20,7 @@ export const getPostsSuccessAction = createAction(
 
 export const createPostAction = createAction(
   '[POSTS] create post',
-  props<{ post: Post }>()
+  props<{ post: CreatePost }>()
 );
 
 export const createPostSuccessAction = createAction(
@@ -49,3 +49,5 @@ export const deletePostSuccessAction = createAction(
 );
 
 export const clearPostsAction = createAction('[POSTS] clear posts store');
+
+

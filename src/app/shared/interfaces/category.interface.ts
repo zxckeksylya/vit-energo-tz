@@ -1,4 +1,5 @@
 import { IdItem } from './id-item.interface';
+
 export interface Category {
   name: string;
 }

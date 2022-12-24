@@ -4,6 +4,7 @@ import { select, Store } from '@ngrx/store';
 import { concatMap, map, switchMap, take } from 'rxjs';
 import { PostsService } from '../../shared/services/posts.service';
 import { AppState } from '../app.reducers';
+import { userSelector } from '../auth/auth.selectors';
 import {
   createPostAction,
   createPostSuccessAction,
@@ -15,7 +16,7 @@ import {
   initPostsStoreFailedAction,
   initPostsStoreSuccessAction,
   updatePostAction,
-  updatePostSuccessAction,
+  updatePostSuccessAction
 } from './posts.actions';
 import { getIsInitPostsSelector } from './posts.selects';
 
@@ -61,7 +62,13 @@ export class PostEffects {
   public createPost$ = createEffect(() =>
     this.actions$.pipe(
       ofType(createPostAction),
-      switchMap((post) => this.postService.createPost(post.post)),
+      switchMap((post) =>
+        this.store.pipe(
+          select(userSelector),
+          map((user) => ({ createUserId: user!.uid, ...post.post }))
+        )
+      ),
+      switchMap((post) => this.postService.createPost(post)),
       switchMap((post) => this.postService.getPostById(post.id)),
       map((post) =>
         createPostSuccessAction({ id: post.id, post: post.data()! })
@@ -70,17 +77,22 @@ export class PostEffects {
   );
 
   public updatePost$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType(updatePostAction),
-      concatMap((post) =>
-        this.postService
-          .updatePost(post.id, post.post)
-          .pipe(switchMap(() => this.postService.getPostById(post.id)))
-      ),
-      map((post) =>
-        updatePostSuccessAction({ id: post.id, post: post.data()! })
-      )
+  this.actions$.pipe(
+    ofType(updatePostAction),
+    concatMap((post) =>
+      this.postService
+        .updatePost(post.id, post.post)
+        .pipe(
+          switchMap(() => this.postService.getPostById(post.id))
+        )
+    ),
+    map((post) =>
+      updatePostSuccessAction({
+        id: post.id,
+        post: post.data()!,
+      })
     )
+  )
   );
 
   public deletePost$ = createEffect(() =>

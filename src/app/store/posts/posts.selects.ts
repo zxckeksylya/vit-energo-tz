@@ -1,4 +1,4 @@
-import { createFeatureSelector, createSelector } from '@ngrx/store';
+import { createFeatureSelector, createSelector, props } from '@ngrx/store';
 import { PostsState, POSTS_FEATURE_KEY } from './posts.reducers';
 import { authorizationFeatureSelector } from '../auth/auth.selectors';
 import { mapToArrayWithId } from '../../shared/utils/map-to-array-with-id';
@@ -20,6 +20,11 @@ export const getPostsByCurrentUserSelector = createSelector(
   authorizationFeatureSelector,
   (postState, authState) =>
     mapToArrayWithId<PostMap, TablePostItem>(postState.posts).filter(
-      (post) => post.createUserId === authState.user?.uid
+      (post) => post.createUserId === authState.user!.uid
     )
 );
+
+export const getPostByIdSelector = createSelector(
+  postsFeatureSelector,
+  (state:PostsState,props:{id:string})=>state.posts[props.id]
+)

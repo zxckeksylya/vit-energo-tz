@@ -1,1 +1,7 @@
-<p>post-form works!</p>
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <app-input formControlName="title" label="название"></app-input>
+    <app-textarea formControlName="content" label="контент"></app-textarea>
+    <app-checkbox-list formControlName="categories" label="категории" [list]="categories"></app-checkbox-list>
+    <app-button type="submit">сохранить</app-button>
+    <app-button (buttonClick)="back()">отмена</app-button>
+</form>

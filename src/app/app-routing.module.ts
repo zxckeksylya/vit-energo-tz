@@ -18,11 +18,6 @@ const routes: Routes = [
       ),
   },
   {
-    path: 'posts',
-    loadChildren: () =>
-      import('./lazy-modules/posts/posts.module').then((m) => m.PostsModule),
-  },
-  {
     path: '**',
     redirectTo: RoutingConstants.MAIN,
   },

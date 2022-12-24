@@ -1,1 +1,29 @@
-<p>posts-list-page works!</p>
+<div class="container">
+    <table class="table">
+        <caption>Ваши посты</caption>
+        <colgroup>
+            <col width="10%">
+            <col width="405">
+            <col width="25%">
+            <col width="25%">
+        </colgroup>
+        <thead>
+            <tr>
+                <td>№</td>
+                <td>название</td>
+                <td></td>
+                <td></td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let item of posts;let i = index">
+                <td>{{i+1}}</td>
+                <td>{{item.title}}</td>
+                <td><app-button (buttonClick)="updatePost(item.id)">изменить</app-button></td>
+                <td><app-button (buttonClick)="deletePost(item.id)">удалить</app-button></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <app-button (buttonClick)="createPost()">создать пост</app-button>
+</div>

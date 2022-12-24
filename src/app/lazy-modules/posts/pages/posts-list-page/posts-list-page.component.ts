@@ -2,11 +2,11 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { select, Store } from '@ngrx/store';
 import { Subject, takeUntil } from 'rxjs';
+import { RoutingConstants } from '../../../../shared/constants/routing.constants';
 import { TablePostItem } from '../../../../shared/interfaces/post.interface';
 import { AppState } from '../../../../store/app.reducers';
 import { deletePostAction } from '../../../../store/posts/posts.actions';
 import { getPostsByCurrentUserSelector } from '../../../../store/posts/posts.selects';
-import { RoutingConstants } from '../../../../shared/constants/routing.constants';
 
 @Component({
   selector: 'app-posts-list-page',
@@ -44,6 +44,8 @@ export class PostsListPageComponent implements OnInit, OnDestroy {
   private initData(): void {
     this.store
       .pipe(select(getPostsByCurrentUserSelector), takeUntil(this.destroy$))
-      .subscribe((posts) => (this.posts = posts));
+      .subscribe((posts) => {
+        this.posts = posts;
+      });
   }
 }

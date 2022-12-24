@@ -10,6 +10,7 @@ import { PostsCreatePageComponent } from './pages/posts-create-page/posts-create
 import { PostsListPageComponent } from './pages/posts-list-page/posts-list-page.component';
 import { PostsUpdatePageComponent } from './pages/posts-update-page/posts-update-page.component';
 import { PostsRoutingModule } from './posts-routing.module';
+import { CheckboxListModule } from '../../shared/components/controls/checkbox-list/checkbox-list.module';
 
 @NgModule({
   declarations: [
@@ -25,6 +26,7 @@ import { PostsRoutingModule } from './posts-routing.module';
     InputModule,
     ButtonModule,
     TextareaModule,
+    CheckboxListModule
   ],
 })
 export class PostsModule {}
