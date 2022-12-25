@@ -1,5 +1,5 @@
 export enum RoutingConstants {
-  MAIN = '',
+  MAIN = 'main',
   AUTH = 'auth',
   LOGIN = 'login',
   REGISTRATION = 'registration',
@@ -9,4 +9,6 @@ export enum RoutingConstants {
   CREATE = 'create',
   UPDATE = 'update',
   POSTS = 'posts',
+  CONTENT = 'content',
+  GENERAL = 'general'
 }

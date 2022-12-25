@@ -1,12 +1,7 @@
 import { createAction, props } from '@ngrx/store';
-import {
-    Comment,
-    CommentMap
-} from '../../shared/interfaces/comment.interface';
+import { Comment, CommentMap } from '../../shared/interfaces/comment.interface';
 
-export const initCommentsStoreAction = createAction(
-  '[COMMENTS] init comments'
-);
+export const initCommentsStoreAction = createAction('[COMMENTS] init comments');
 
 export const initCommentsStoreSuccessAction = createAction(
   '[COMMENTS] success init comments'

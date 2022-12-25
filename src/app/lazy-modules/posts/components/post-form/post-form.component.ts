@@ -40,7 +40,6 @@ export class PostFormComponent implements OnChanges,OnInit {
   public ngOnInit(): void {
     this.store.pipe(select(getCategoriesSelector),takeUntil(this.destroy$)).subscribe(data=>{
       this.categories = data.map(x=>({label:x.name,value:x.id}))
-      this.cdr.markForCheck()
     })
   }
 

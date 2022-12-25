@@ -14,7 +14,6 @@ import { initCategoriesStoreAction } from '../../../../store/categories/category
 export class MainPageComponent implements OnInit {
   constructor(private store: Store<AppState>) {
     this.store.dispatch(getPostsAction());
-    this.store.pipe(select(getPostsSelector)).subscribe((p) => console.log(p));
   }
 
   public ngOnInit(): void {

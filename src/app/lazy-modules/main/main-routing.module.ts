@@ -5,7 +5,7 @@ import { RoutingConstants } from '../../shared/constants/routing.constants';
 
 const routes: Routes = [
   {
-    path: '',
+    path: RoutingConstants.MAIN,
     component: MainPageComponent,
     children: [
       {
@@ -20,8 +20,16 @@ const routes: Routes = [
         loadChildren: () =>
           import('../posts/posts.module').then((m) => m.PostsModule),
       },
+      {
+        path:RoutingConstants.CONTENT,
+        loadChildren:()=>import('../contents/contents.module').then(m=>m.ContentsModule)
+      }
     ],
   },
+  {
+    path:'**',
+    redirectTo:RoutingConstants.MAIN
+  }
 ];
 
 @NgModule({

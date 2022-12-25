@@ -3,6 +3,7 @@ export interface Post {
   createUserId: string;
   title: string;
   content: string;
+  categories:string[];
 }
 
 export interface CreatePost {

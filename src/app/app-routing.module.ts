@@ -5,7 +5,7 @@ import { AuthGuard } from './shared/guards/auth.guard';
 
 const routes: Routes = [
   {
-    path: RoutingConstants.MAIN,
+    path: RoutingConstants.GENERAL,
     loadChildren: () =>
       import('./lazy-modules/main/main.module').then((m) => m.MainModule),
     canActivate: [AuthGuard],

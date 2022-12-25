@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { select, Store } from '@ngrx/store';
 import { concatMap, map, switchMap, take } from 'rxjs';
+import { CommentsService } from '../../shared/services/comments.service';
 import { AppState } from '../app.reducers';
 import {
   createCommentAction,
@@ -16,6 +17,7 @@ import {
   updateCommentAction,
   updateCommentSuccessAction,
 } from './comments.action';
+import { getIsInitCommentsSelector } from './comments.selectors';
 
 @Injectable()
 export class CommentEffect {
@@ -101,7 +103,7 @@ export class CommentEffect {
 
   constructor(
     private actions$: Actions,
-    private commentsService: CommentService,
+    private commentsService: CommentsService,
     private store: Store<AppState>
   ) {}
 }

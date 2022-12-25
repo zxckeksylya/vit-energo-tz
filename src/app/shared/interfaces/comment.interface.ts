@@ -9,4 +9,8 @@ export interface CommentMap{
     [id:string]:Comment;
 }
 
+export interface CreateComment{
+    content:string;
+}
+
 export interface TableCommentItem extends Comment,IdItem{}
