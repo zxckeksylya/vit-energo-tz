@@ -19,7 +19,7 @@ const routes: Routes = [
   },
   {
     path: '**',
-    redirectTo: RoutingConstants.MAIN,
+    redirectTo: RoutingConstants.GENERAL,
   },
 ];
 

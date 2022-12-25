@@ -4,6 +4,7 @@ import { select, Store } from '@ngrx/store';
 import { concatMap, map, switchMap, take } from 'rxjs';
 import { CommentsService } from '../../shared/services/comments.service';
 import { AppState } from '../app.reducers';
+import { userSelector } from '../auth/auth.selectors';
 import {
   createCommentAction,
   createCommentSuccessAction,
@@ -61,12 +62,26 @@ export class CommentEffect {
   public createComment$ = createEffect(() =>
     this.actions$.pipe(
       ofType(createCommentAction),
-      switchMap((comment) =>
-        this.commentsService.createComment(comment.comment)
-      ),
-      switchMap((comment) => this.commentsService.getCommentById(comment.id)),
-      map((item) =>
-        createCommentSuccessAction({ id: item.id, comment: item.data()! })
+      switchMap((action) =>
+        this.store.pipe(
+          select(userSelector),
+          concatMap((user) =>
+            this.commentsService
+              .createComment({ ...action.comment, createUserId: user!.uid })
+              .pipe(
+                concatMap((comment) =>
+                  this.commentsService.getCommentById(comment.id)
+                ),
+                map((item) =>
+                  createCommentSuccessAction({
+                    postId: action.postId,
+                    id: item.id,
+                    comment: item.data()!,
+                  })
+                )
+              )
+          )
+        )
       )
     )
   );

@@ -16,6 +16,6 @@ export class PostsCreatePageComponent {
 
   public createPost(post: CreatePost): void {
     this.store.dispatch(createPostAction({ post }));
-    this.route.navigate([RoutingConstants.POSTS]);
+    this.route.navigate([RoutingConstants.GENERAL,RoutingConstants.MAIN,RoutingConstants.POSTS]);
   }
 }

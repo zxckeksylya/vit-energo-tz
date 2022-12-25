@@ -1,5 +1,9 @@
-<app-checkbox-list [formControl]="formControl" [list]="categories"></app-checkbox-list>
+<div class="categories">
+    <app-checkbox-list [formControl]="formControl" [list]="categories"></app-checkbox-list>
+</div>
 
-<div *ngFor="let item of posts">
-    {{item.title}}
+<div class="posts">
+    <ng-container *ngFor="let post of posts">
+        <app-post-card [post]="post"></app-post-card>
+    </ng-container>
 </div>

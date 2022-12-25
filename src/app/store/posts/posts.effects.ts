@@ -2,10 +2,13 @@ import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { select, Store } from '@ngrx/store';
 import { concatMap, map, switchMap, take } from 'rxjs';
+import { Post } from '../../shared/interfaces/post.interface';
 import { PostsService } from '../../shared/services/posts.service';
 import { AppState } from '../app.reducers';
 import { userSelector } from '../auth/auth.selectors';
 import {
+  changeLikePost,
+  changeLikePostSuccess,
   createPostAction,
   createPostSuccessAction,
   deletePostAction,
@@ -16,9 +19,10 @@ import {
   initPostsStoreFailedAction,
   initPostsStoreSuccessAction,
   updatePostAction,
-  updatePostSuccessAction
+  updatePostSuccessAction,
 } from './posts.actions';
-import { getIsInitPostsSelector } from './posts.selects';
+import { getIsInitPostsSelector, getPostByIdSelector } from './posts.selects';
+import { createCommentSuccessAction } from '../comments/comments.action';
 
 @Injectable()
 export class PostEffects {
@@ -65,7 +69,12 @@ export class PostEffects {
       switchMap((post) =>
         this.store.pipe(
           select(userSelector),
-          map((user) => ({ createUserId: user!.uid, ...post.post }))
+          map((user) => ({
+            createUserId: user!.uid,
+            ...post.post,
+            likesIds: [],
+            comments: [],
+          }))
         )
       ),
       switchMap((post) => this.postService.createPost(post)),
@@ -77,22 +86,40 @@ export class PostEffects {
   );
 
   public updatePost$ = createEffect(() =>
-  this.actions$.pipe(
-    ofType(updatePostAction),
-    concatMap((post) =>
-      this.postService
-        .updatePost(post.id, post.post)
-        .pipe(
-          switchMap(() => this.postService.getPostById(post.id))
-        )
-    ),
-    map((post) =>
-      updatePostSuccessAction({
-        id: post.id,
-        post: post.data()!,
-      })
+    this.actions$.pipe(
+      ofType(updatePostAction, changeLikePostSuccess),
+      concatMap((post) =>
+        this.postService
+          .updatePost(post.id, post.post)
+          .pipe(switchMap(() => this.postService.getPostById(post.id)))
+      ),
+      map((post) =>
+        updatePostSuccessAction({
+          id: post.id,
+          post: post.data()!,
+        })
+      )
     )
-  )
+  );
+
+  public addComment$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(createCommentSuccessAction),
+      concatMap((action) =>
+        this.store.pipe(
+          take(1),
+          select((state) => getPostByIdSelector(state, { id: action.postId })),
+          map((post) => {
+            const newCommentsArr = [...post.comments];
+            newCommentsArr.push(action.id);
+            return updatePostAction({
+              id: action.postId,
+              post: { ...post, comments: newCommentsArr },
+            });
+          })
+        )
+      )
+    )
   );
 
   public deletePost$ = createEffect(() =>
@@ -102,6 +129,48 @@ export class PostEffects {
         this.postService
           .deletePost(action.id)
           .pipe(map(() => deletePostSuccessAction({ id: action.id })))
+      )
+    )
+  );
+
+  public changePostLike$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(changeLikePost),
+      switchMap((action) =>
+        this.store.pipe(
+          select((state) => getPostByIdSelector(state, { id: action.id })),
+          concatMap((post) =>
+            this.store.pipe(
+              select(userSelector),
+              map((user) => {
+                if (post.likesIds.includes(user!.uid)) {
+                  const indexOfLike = post.likesIds.indexOf(user!.uid);
+                  const newLikesArr = [...post.likesIds];
+                  newLikesArr.splice(indexOfLike, 1);
+                  const newPost: Post = {
+                    ...post,
+                    likesIds: newLikesArr,
+                  };
+                  return changeLikePostSuccess({
+                    id: action.id,
+                    post: newPost,
+                  });
+                } else {
+                  const newLikesArr = [...post.likesIds];
+                  newLikesArr.push(user!.uid);
+                  const newPost: Post = {
+                    ...post,
+                    likesIds: newLikesArr,
+                  };
+                  return changeLikePostSuccess({
+                    id: action.id,
+                    post: newPost,
+                  });
+                }
+              })
+            )
+          )
+        )
       )
     )
   );

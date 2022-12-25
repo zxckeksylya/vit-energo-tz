@@ -48,6 +48,6 @@ export class PostsUpdatePageComponent implements OnInit, OnDestroy  {
 
   public updatePost(post: CreatePost): void {
     this.store.dispatch(updatePostAction({ id: this.id, post:{...this.post, ...post} }));
-    this.route.navigate([RoutingConstants.POSTS]);
+    this.route.navigate([RoutingConstants.GENERAL,RoutingConstants.MAIN,RoutingConstants.POSTS]);
   }
 }

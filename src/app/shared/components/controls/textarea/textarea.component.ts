@@ -8,4 +8,5 @@ import { BaseControl } from '../../../classes/base-control.class';
 })
 export class TextareaComponent extends BaseControl {
   @Input() public label = '';
+  @Input() public readonly = false;
 }

@@ -1,0 +1,21 @@
+:host{
+    display: block;
+
+    .categories{
+        width: 100%;
+        padding-left: 24px;
+        padding-right: 24px;
+        padding-top: 30px;
+        padding-bottom: 30px;
+        background-color: #fff;
+
+        margin-bottom: 30px;
+        border: 1px solid #C4C4C4;
+    }
+
+    .posts{
+        display: flex;
+        flex-direction: column;
+        row-gap: 30px;
+    }
+}

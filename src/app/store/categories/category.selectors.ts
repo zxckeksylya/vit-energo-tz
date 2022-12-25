@@ -27,11 +27,12 @@ export const getCategoryByIdSelector = createSelector(
 export const getCategoriesByIdsSelector = createSelector(
   categoriesFeatureSelector,
   (state: CategoryState, props: string[]) =>
-  
- { console.log(props)
-    return props.map(id=>{console.log(state.categories[id])
-      return {
-      id,
-      name:state.categories[id].name
-    }})}
+  mapToArrayWithId<CategoryMap, TableCategoryItem>(state.categories).filter((x)=>{
+    for(let i =0;i<props.length;i++){
+      if(props[i]===x.id){
+        return true
+      }
+    }
+    return false;
+  })
 );

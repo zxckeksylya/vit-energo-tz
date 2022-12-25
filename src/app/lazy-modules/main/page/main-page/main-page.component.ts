@@ -1,10 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { PostsService } from '../../../../shared/services/posts.service';
+import { Store } from '@ngrx/store';
 import { AppState } from '../../../../store/app.reducers';
-import { Store, select } from '@ngrx/store';
-import { getPostsSelector } from '../../../../store/posts/posts.selects';
-import { getPostsAction } from '../../../../store/posts/posts.actions';
 import { initCategoriesStoreAction } from '../../../../store/categories/category.actions';
+import { initPostsStoreAction } from '../../../../store/posts/posts.actions';
+import { initCommentsStoreAction } from '../../../../store/comments/comments.action';
 
 @Component({
   selector: 'app-main-page',
@@ -13,7 +12,7 @@ import { initCategoriesStoreAction } from '../../../../store/categories/category
 })
 export class MainPageComponent implements OnInit {
   constructor(private store: Store<AppState>) {
-    this.store.dispatch(getPostsAction());
+    this.store.dispatch(initPostsStoreAction());
   }
 
   public ngOnInit(): void {
@@ -22,5 +21,6 @@ export class MainPageComponent implements OnInit {
 
   private initData(): void {
     this.store.dispatch(initCategoriesStoreAction());
+    this.store.dispatch(initCommentsStoreAction());
   }
 }

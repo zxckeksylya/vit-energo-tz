@@ -30,7 +30,7 @@ export class PostsListPageComponent implements OnInit, OnDestroy {
   }
 
   public createPost(): void {
-    this.route.navigate([RoutingConstants.POSTS, RoutingConstants.CREATE]);
+    this.route.navigate([RoutingConstants.GENERAL,RoutingConstants.MAIN,RoutingConstants.POSTS, RoutingConstants.CREATE]);
   }
 
   public deletePost(id: string): void {
@@ -38,7 +38,7 @@ export class PostsListPageComponent implements OnInit, OnDestroy {
   }
 
   public updatePost(id: string): void {
-    this.route.navigate([RoutingConstants.POSTS, RoutingConstants.UPDATE, id]);
+    this.route.navigate([RoutingConstants.GENERAL,RoutingConstants.MAIN,RoutingConstants.POSTS, RoutingConstants.UPDATE, id]);
   }
 
   private initData(): void {

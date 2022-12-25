@@ -1,0 +1,16 @@
+<form [formGroup]="commentForm">
+  <app-textarea formControlName="content" [readonly]="change"></app-textarea>
+</form>
+<div class="buttons">
+
+    <ng-container *ngIf="viewButtons">
+        <ng-container *ngIf="!change">
+            <app-button (buttonClick)="onSubmit()">сохранить</app-button>
+        </ng-container>
+        <ng-container *ngIf="change">
+            <app-button (buttonClick)="onChange()">изменить</app-button>
+            <app-button>удалить</app-button>
+        </ng-container>
+    </ng-container>
+    
+</div>

@@ -10,7 +10,6 @@ import { Subject, takeUntil } from 'rxjs';
 export class CheckboxListComponent
   implements ControlValueAccessor, OnInit, OnDestroy,OnChanges
 {
-  @Input() public label = ''
 
   @Input() public list: {label:string,value:string}[] = [];
 
@@ -33,15 +32,13 @@ export class CheckboxListComponent
     
       if(this.formControlArray.length===0){
         changes.list.currentValue.forEach((x: { value: string; })=>{
-          console.log('mme')
           if(this.listValues.includes(x.value)){
-            this.formControlArray.push(this.fb.control(true))
+            this.formControlArray.push(this.fb.control(true),{emitEvent:false})
           }else{
-            this.formControlArray.push(this.fb.control(false))
+            this.formControlArray.push(this.fb.control(false),{emitEvent:false})
           }
         })
       }
-      console.log(this.formControlArray)
     }
   }
 

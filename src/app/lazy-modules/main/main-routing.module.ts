@@ -23,7 +23,12 @@ const routes: Routes = [
       {
         path:RoutingConstants.CONTENT,
         loadChildren:()=>import('../contents/contents.module').then(m=>m.ContentsModule)
+      },
+      {
+        path:'**',
+        redirectTo:RoutingConstants.CONTENT,
       }
+
     ],
   },
   {

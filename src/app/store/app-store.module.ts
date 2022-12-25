@@ -6,6 +6,7 @@ import { AuthEffect } from './auth/auth.effect';
 import { ErrorEffects } from './errors/errors.effect';
 import { PostEffects } from './posts/posts.effects';
 import { CategoryEffect } from './categories/category.effects';
+import { CommentEffect } from './comments/comments.effects';
 
 @NgModule({
   imports: [
@@ -15,6 +16,7 @@ import { CategoryEffect } from './categories/category.effects';
       ErrorEffects,
       PostEffects,
       CategoryEffect,
+      CommentEffect
     ]),
   ],
   exports: [StoreModule, EffectsModule],

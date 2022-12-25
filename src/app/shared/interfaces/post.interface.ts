@@ -4,6 +4,8 @@ export interface Post {
   title: string;
   content: string;
   categories:string[];
+  likesIds:string[];
+  comments:string[];
 }
 
 export interface CreatePost {

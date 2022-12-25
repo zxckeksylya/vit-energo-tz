@@ -1,5 +1,5 @@
 import { createAction, props } from '@ngrx/store';
-import { Comment, CommentMap } from '../../shared/interfaces/comment.interface';
+import { Comment, CommentMap, CreateComment } from '../../shared/interfaces/comment.interface';
 
 export const initCommentsStoreAction = createAction('[COMMENTS] init comments');
 
@@ -20,12 +20,12 @@ export const getCommentsSuccessAction = createAction(
 
 export const createCommentAction = createAction(
   '[COMMENTS] create comment',
-  props<{ comment: Comment }>()
+  props<{ postId:string,comment: CreateComment }>()
 );
 
 export const createCommentSuccessAction = createAction(
   '[COMMENTS] create comment success',
-  props<{ id: string; comment: Comment }>()
+  props<{postId:string, id: string; comment: Comment }>()
 );
 
 export const updateCommentAction = createAction(
