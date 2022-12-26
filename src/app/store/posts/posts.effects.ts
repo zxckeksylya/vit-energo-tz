@@ -22,7 +22,10 @@ import {
   updatePostSuccessAction,
 } from './posts.actions';
 import { getIsInitPostsSelector, getPostByIdSelector } from './posts.selects';
-import { createCommentSuccessAction, deleteCommentSuccessAction } from '../comments/comments.action';
+import {
+  createCommentSuccessAction,
+  deleteCommentSuccessAction,
+} from '../comments/comments.action';
 import { ImagesService } from 'src/app/shared/services/images.service';
 import { createLikeAction } from '../likes/likes.actions';
 import { lustCreatedLikeIdSelector } from '../likes/likes.selectors';
@@ -72,20 +75,20 @@ export class PostEffects {
       switchMap((post) =>
         this.store.pipe(
           select(userSelector),
-          concatMap((user) => {
-            this.store.dispatch(createLikeAction({like:{likes:[user!.uid]}}))
-            return this.store.pipe(select(lustCreatedLikeIdSelector),map(likeId=>({
+          map((user) => {
+            return {
               createUserId: user!.uid,
               ...post.post,
-              likesIds: likeId,
+              likesIds: '',
               comments: [],
-            })))})
+            };
+          }),
+          switchMap((post) => this.postService.createPost(post)),
+          switchMap((post) => this.postService.getPostById(post.id)),
+          map((post) =>
+            createPostSuccessAction({ id: post.id, post: post.data()! })
+          )
         )
-      ),
-      switchMap((post) => this.postService.createPost(post)),
-      switchMap((post) => this.postService.getPostById(post.id)),
-      map((post) =>
-        createPostSuccessAction({ id: post.id, post: post.data()! })
       )
     )
   );
@@ -127,24 +130,26 @@ export class PostEffects {
     )
   );
 
-  public deleteComment$ = createEffect(()=>this.actions$.pipe(
-    ofType(deleteCommentSuccessAction),
-    concatMap((action) =>
-    this.store.pipe(
-      take(1),
-      select((state) => getPostByIdSelector(state, { id: action.postId })),
-      map((post) => {
-        const newCommentsArr = [...post.comments];
-        const index = newCommentsArr.indexOf(action.id);
-        newCommentsArr.splice(index,1);
-        return updatePostAction({
-          id: action.postId,
-          post: { ...post, comments: newCommentsArr },
-        });
-      })
+  public deleteComment$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(deleteCommentSuccessAction),
+      concatMap((action) =>
+        this.store.pipe(
+          take(1),
+          select((state) => getPostByIdSelector(state, { id: action.postId })),
+          map((post) => {
+            const newCommentsArr = [...post.comments];
+            const index = newCommentsArr.indexOf(action.id);
+            newCommentsArr.splice(index, 1);
+            return updatePostAction({
+              id: action.postId,
+              post: { ...post, comments: newCommentsArr },
+            });
+          })
+        )
+      )
     )
-  )
-  ))
+  );
 
   public deletePost$ = createEffect(() =>
     this.actions$.pipe(
@@ -160,6 +165,6 @@ export class PostEffects {
   constructor(
     private actions$: Actions,
     private postService: PostsService,
-    private store: Store<AppState>,
+    private store: Store<AppState>
   ) {}
 }

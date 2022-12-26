@@ -11,26 +11,27 @@ import { Post } from 'src/app/shared/interfaces/post.interface';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Location } from '@angular/common';
 import { CreatePost } from '../../../../shared/interfaces/post.interface';
-import { OnInit } from '@angular/core';
+import { OnInit, OnDestroy } from '@angular/core';
 import { AppState } from '../../../../store/app.reducers';
 import { select, Store } from '@ngrx/store';
 import { getCategoriesSelector } from '../../../../store/categories/category.selectors';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, takeUntil, finalize, Observable } from 'rxjs';
 import { ImagesService } from '../../../../shared/services/images.service';
+import { AngularFireStorage } from '@angular/fire/compat/storage';
 
 @Component({
   selector: 'app-post-form',
   templateUrl: './post-form.component.html',
   styleUrls: ['./post-form.component.scss'],
 })
-export class PostFormComponent implements OnChanges, OnInit {
+export class PostFormComponent implements OnChanges, OnInit,OnDestroy {
   @Input() public post!: Post;
 
   @Output() public submitted = new EventEmitter<CreatePost>();
 
   public form!: FormGroup;
 
-  private imgUrl='';
+  public imgUrl='';
 
   public categories: { label: string; value: string }[] = [];
 
@@ -40,7 +41,8 @@ export class PostFormComponent implements OnChanges, OnInit {
     private fb: FormBuilder,
     private location: Location,
     private store: Store<AppState>,
-    private imagesService:ImagesService
+    private imagesService:ImagesService,
+    private afs:AngularFireStorage
   ) {
     this.initForm();
   }
@@ -61,6 +63,11 @@ export class PostFormComponent implements OnChanges, OnInit {
     }
   }
 
+  public ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
   public onSubmit(): void {
     this.form.markAllAsTouched();
     if (this.form.invalid) {
@@ -75,7 +82,20 @@ export class PostFormComponent implements OnChanges, OnInit {
   }
 
   public upload(event:any){
-    this.imgUrl = this.imagesService.upload(event)
+
+    const randomId = Math.random().toString(36).substring(2);
+    const imagePath = '/images/'+randomId;
+    const ref = this.afs.ref('/images/'+randomId);
+
+    const task = ref.put(event.target.files[0]);
+    let downloadURL: Observable<string>;
+    task.snapshotChanges().pipe(
+        finalize(()=>{downloadURL = ref.getDownloadURL();
+        downloadURL.pipe(takeUntil(this.destroy$)).subscribe(url=>this.imgUrl = url)
+        } 
+            
+        )
+    ).subscribe();
   };
 
   private initForm(): void {

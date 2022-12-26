@@ -1,7 +1,7 @@
 <div class="title">
   {{ post.title }}
 </div>
-<img class="img" [src]="imgLink" alt="img">
+<img class="img" [src]="post.imgUrl" alt="img">
 <div class="content">
  <app-like-card [likeId]="post.likesIds"></app-like-card>
   <div class="content-content">

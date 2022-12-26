@@ -47,11 +47,11 @@ export class PostCardComponent implements OnInit {
     });
     this.initCommentForm();
 
-    this.imagesService.getImageLink(this.post.imgUrl).pipe(take(1)).subscribe((imgLink) => {
-      this.imgLink = imgLink;
-      console.log(imgLink);
-      this.cdref.markForCheck();
-    });
+    // this.imagesService.getImageLink(this.post.imgUrl).pipe(take(1)).subscribe((imgLink) => {
+    //   this.imgLink = imgLink;
+    //   console.log(imgLink);
+    //   this.cdref.markForCheck();
+    // });
   }
 
   public initCommentForm(): void {

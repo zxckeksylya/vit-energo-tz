@@ -30,11 +30,18 @@ export class CategoriesListPageComponent implements OnInit, OnDestroy {
   }
 
   public createCategory(): void {
-    this.route.navigate([RoutingConstants.CATEGORIES, RoutingConstants.CREATE]);
+    this.route.navigate([
+      RoutingConstants.GENERAL,
+      RoutingConstants.MAIN,
+      RoutingConstants.CATEGORIES,
+      RoutingConstants.CREATE,
+    ]);
   }
 
   public updateCategory(id: string): void {
     this.route.navigate([
+      RoutingConstants.GENERAL,
+      RoutingConstants.MAIN,
       RoutingConstants.CATEGORIES,
       RoutingConstants.UPDATE,
       id,

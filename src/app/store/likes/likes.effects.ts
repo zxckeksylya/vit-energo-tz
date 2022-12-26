@@ -21,6 +21,10 @@ import {
   updateLikeSuccessAction,
 } from './likes.actions';
 import { getIsInitLikesSelector, getLikeByIdSelector } from './likes.selectors';
+import {
+  createPostSuccessAction,
+  updatePostAction,
+} from '../posts/posts.actions';
 
 @Injectable()
 export class LikesEffect {
@@ -72,6 +76,28 @@ export class LikesEffect {
     )
   );
 
+  public createLikeWhenPostCreated$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(createPostSuccessAction),
+      concatMap((action) =>
+        this.likesService.createLike({ likes: [] }).pipe(
+          switchMap((like) => {
+            this.store.dispatch(
+              updatePostAction({
+                id: action.id,
+                post: { ...action.post, likesIds: like.id },
+              })
+            );
+            return this.likesService.getLikeById(like.id);
+          })
+        )
+      ),
+      map((item) =>
+        createLikeSuccessAction({ id: item.id, like: item.data()! })
+      )
+    )
+  );
+
   public updateLike$ = createEffect(() =>
     this.actions$.pipe(
       ofType(updateLikeAction, changeLikeByIdSuccessAction),
@@ -107,8 +133,9 @@ export class LikesEffect {
         this.store
           .select((state) => getLikeByIdSelector(state, { id: action.id }))
           .pipe(
+            take(1),
             concatMap((like) =>
-              this.store.pipe(select(userSelector)).pipe(
+              this.store.pipe(select(userSelector), take(1)).pipe(
                 map((user) => {
                   const newLikes = [...like.likes];
                   if (like.likes.includes(user!.uid)) {
