@@ -2,6 +2,7 @@
     <app-input formControlName="title" label="название"></app-input>
     <app-textarea formControlName="content" label="контент"></app-textarea>
     <app-checkbox-list formControlName="categories" label="категории" [list]="categories"></app-checkbox-list>
+    <input type="file" (change)="upload($event)" accept=".png,.jpg">
     <app-button type="submit">сохранить</app-button>
     <app-button (buttonClick)="back()">отмена</app-button>
 </form>

@@ -9,7 +9,7 @@
         </ng-container>
         <ng-container *ngIf="change">
             <app-button (buttonClick)="onChange()">изменить</app-button>
-            <app-button>удалить</app-button>
+            <app-button (buttonClick)="deleteComment()">удалить</app-button>
         </ng-container>
     </ng-container>
     

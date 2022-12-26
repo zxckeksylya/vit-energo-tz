@@ -1,7 +1,12 @@
 <div class="container">
-  <h2 class="logo">ENERGOGRAM</h2>
+  <a class="logo" [routerLink]="['/general']" routerLinkActive="router-link-active" >
+    <h2 >ENERGOGRAM</h2>
+
+  </a>
+  
   <div class="menu">
-    <app-button>добавить публикацию</app-button>
+    <app-button (buttonClick)="goToComments()">категории</app-button>
+    <app-button (buttonClick)="goToPosts()">ваши публикацию</app-button>
     <app-button (buttonClick)="logout()">выйти</app-button>
   </div>
 </div>

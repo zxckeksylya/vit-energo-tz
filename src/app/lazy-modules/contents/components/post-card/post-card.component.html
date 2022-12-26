@@ -1,22 +1,9 @@
 <div class="title">
   {{ post.title }}
 </div>
-
+<img class="img" [src]="imgLink" alt="img">
 <div class="content">
-  <div class="likes">
-    <app-like-checkbox
-      class="like"
-      [formControl]="likeControl"
-    ></app-like-checkbox>
-
-    {{ post.likesIds.length }}
-    {{
-      post.likesIds.length % 10 > 5 || post.likesIds.length === 0
-        ? "отметок"
-        : "отметка"
-    }}
-    "Нравится"
-  </div>
+ <app-like-card [likeId]="post.likesIds"></app-like-card>
   <div class="content-content">
     <div class="content-title">{{ post.title }}</div>
     <div class="content-text">{{ post.content }}</div>
@@ -24,12 +11,13 @@
 </div>
 
 <div class="comments">
-    <form [formGroup]="commentForm" (ngSubmit)="onSubmitForm()">
+  коментарии
+    <form class="comment-form" [formGroup]="commentForm" (ngSubmit)="onSubmitForm()">
         <app-textarea formControlName="content"></app-textarea>
-        <app-button type="submit">сохранить</app-button>
+        <app-button class="comment-form-button" type="submit">сохранить</app-button>
     </form>
+  
     <ng-container *ngFor="let item of post.comments">
-
-        <app-comment-card [commentId]="item"></app-comment-card>
+        <app-comment-card [commentId]="item" [postId]="post.id"></app-comment-card>
     </ng-container>
 </div>

@@ -1,2 +1,5 @@
-<label class="label" [class.required]="required">{{ label }}</label>
+<ng-container *ngIf="label">
+
+    <label class="label" [class.required]="required">{{ label }}</label>
+</ng-container>
 <textarea class="input" type="text" [readonly]="readonly ? 'readonly' : ''" [formControl]="formControl"></textarea>

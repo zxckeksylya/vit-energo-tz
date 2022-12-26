@@ -1,11 +1,30 @@
-<div *ngFor="let category of categories">
-  <div>{{ category.name }}</div>
-  <app-button (buttonClick)="updateCategory(category.id)"
-    >изменить категорию</app-button
-  >
-  <app-button (buttonClick)="deleteCategory(category.id)"
-    >удалить категорию</app-button
-  >
+<div class="container">
+  <table class="table">
+      <caption>категории</caption>
+      <colgroup>
+          <col width="10%">
+          <col width="405">
+          <col width="25%">
+          <col width="25%">
+      </colgroup>
+      <thead>
+          <tr>
+              <td>№</td>
+              <td>название</td>
+              <td></td>
+              <td></td>
+          </tr>
+      </thead>
+      <tbody>
+          <tr *ngFor="let item of categories;let i = index">
+              <td>{{i+1}}</td>
+              <td>{{item.name}}</td>
+              <td><app-button (buttonClick)="updateCategory(item.id)">изменить</app-button></td>
+              <td><app-button (buttonClick)="deleteCategory(item.id)">удалить</app-button></td>
+          </tr>
+      </tbody>
+  </table>
+
+  <app-button (buttonClick)="createCategory()">создать категорию</app-button>
 </div>
 
-<app-button (buttonClick)="createCategory()">создать категорию</app-button>

@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { select, Store } from '@ngrx/store';
@@ -12,6 +12,7 @@ import { getPostsByCategoriesIdSelector } from '../../../../store/posts/posts.se
   selector: 'app-contents-page',
   templateUrl: './contents-page.component.html',
   styleUrls: ['./contents-page.component.scss'],
+  changeDetection:ChangeDetectionStrategy.OnPush
 })
 export class ContentsPageComponent implements OnInit,OnDestroy {
   public formControl = new FormControl();
@@ -25,7 +26,8 @@ export class ContentsPageComponent implements OnInit,OnDestroy {
   constructor(
     private store: Store<AppState>,
     private route: Router,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private cdRef:ChangeDetectorRef
   ) {}
 
   public ngOnInit(): void {
@@ -33,6 +35,7 @@ export class ContentsPageComponent implements OnInit,OnDestroy {
       .pipe(select(getCategoriesSelector), takeUntil(this.destroy$))
       .subscribe((data) => {
         this.categories = data.map((x) => ({ label: x.name, value: x.id }));
+        this.cdRef.markForCheck()
       });
 
     this.activatedRoute.queryParams
@@ -43,6 +46,7 @@ export class ContentsPageComponent implements OnInit,OnDestroy {
             emitEvent: false,
           });
         }
+        this.cdRef.markForCheck();
       });
 
     this.activatedRoute.queryParams
@@ -60,7 +64,9 @@ export class ContentsPageComponent implements OnInit,OnDestroy {
           )
         )
       )
-      .subscribe((posts) => (this.posts = posts));
+      .subscribe((posts) => {this.posts = posts
+      this.cdRef.markForCheck()
+      });
 
     this.formControl.valueChanges.pipe(takeUntil(this.destroy$)).subscribe((posts) => {
       this.route.navigate([], {
@@ -68,6 +74,7 @@ export class ContentsPageComponent implements OnInit,OnDestroy {
         queryParams: { categories: posts.toString() },
         queryParamsHandling: 'merge',
       });
+      this.cdRef.markForCheck();
     });
   }
 

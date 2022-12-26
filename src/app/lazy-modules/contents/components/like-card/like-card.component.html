@@ -1,0 +1,7 @@
+<app-like-checkbox class="like" [formControl]="likeControl"></app-like-checkbox>
+
+{{ like.likes.length }}
+{{
+  like.likes.length % 10 > 5 || like.likes.length === 0 ? "отметок" : "отметка"
+}}
+"Нравится"

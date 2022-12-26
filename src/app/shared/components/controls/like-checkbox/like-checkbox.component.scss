@@ -11,8 +11,8 @@
     display: inline-flex;
     align-items: center;
     user-select: none;
-    width: 28px; // ширина
-    height: 28px; // высота
+    width: 18px; // ширина
+    height: 18px; // высота
     background-color: #fff; // цвет
     border:1px solid red;
     transform: rotate(45deg);
@@ -23,8 +23,8 @@
   .custom-checkbox > span::before {
     content: ""; // обязательное свойство
     display: block;
-    width: 28px;
-    height: 28px;
+    width: 18px;
+    height: 18px;
     background-color: #fff;
     border:1px solid red;
     transform: rotate(45deg);
@@ -34,13 +34,13 @@
 
   .custom-checkbox > span::after {
     top: -2px;
-    left: -17px;
+    left: -12px;
     border-top: 0;
     border-right:0
   }
 
   .custom-checkbox > span::before {
-    top: -17px;
+    top: -12px;
     left: -2px;
     border-bottom: 0;
     border-right:0

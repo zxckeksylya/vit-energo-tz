@@ -3,13 +3,12 @@ import { PostsState, POSTS_FEATURE_KEY } from './posts.reducers';
 import { authorizationFeatureSelector } from '../auth/auth.selectors';
 import { mapToArrayWithId } from '../../shared/utils/map-to-array-with-id';
 import { PostMap, TablePostItem } from '../../shared/interfaces/post.interface';
-import { state } from '@angular/animations';
-import { AuthState } from '../auth/auth.reducers';
 export const postsFeatureSelector =
   createFeatureSelector<PostsState>(POSTS_FEATURE_KEY);
 
 export const getPostsSelector = createSelector(postsFeatureSelector, (state) =>
-  mapToArrayWithId<PostMap, TablePostItem>(state.posts)
+  {console.log('mem')
+    return mapToArrayWithId<PostMap, TablePostItem>(state.posts)}
 );
 
 export const getIsInitPostsSelector = createSelector(
@@ -28,7 +27,8 @@ export const getPostsByCurrentUserSelector = createSelector(
 
 export const getPostByIdSelector = createSelector(
   postsFeatureSelector,
-  (state: PostsState, props: { id: string }) => state.posts[props.id]
+  (state: PostsState, props: { id: string }) => {console.log('kek')
+    return state.posts[props.id]}
 );
 
 export const getPostsByCategoriesIdSelector = createSelector(
@@ -49,16 +49,3 @@ export const getPostsByCategoriesIdSelector = createSelector(
     }
   }
 );
-
-export const getLikeStatusByPostId = createSelector(
-  postsFeatureSelector,
-  authorizationFeatureSelector,
-  (postsState:PostsState,authState:AuthState,props:string)=>{
-    const post = postsState.posts[props];
-    if(post.likesIds.includes(authState.user!.uid)){
-      return true;
-    }else{
-      return false
-    }
-  }
-)

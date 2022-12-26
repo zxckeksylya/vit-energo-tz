@@ -6,7 +6,7 @@ import {
   createCategorySuccessAction,
   deleteCategorySuccessAction,
   getCategoriesSuccessAction,
-  updateCategorySuccessAction,
+  updateCategorySuccessAction
 } from './category.actions';
 
 export const CATEGORIES_FEATURE_KEY = 'categories';

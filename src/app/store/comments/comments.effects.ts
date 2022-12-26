@@ -111,7 +111,7 @@ export class CommentEffect {
       concatMap((action) =>
         this.commentsService
           .deleteComment(action.id)
-          .pipe(map(() => deleteCommentSuccessAction({ id: action.id })))
+          .pipe(map(() => deleteCommentSuccessAction({ id: action.id,postId:action.postId })))
       )
     )
   );

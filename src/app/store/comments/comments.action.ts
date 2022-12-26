@@ -40,12 +40,12 @@ export const updateCommentSuccessAction = createAction(
 
 export const deleteCommentAction = createAction(
   '[COMMENTS] delete comment',
-  props<{ id: string }>()
+  props<{ id: string ,postId:string}>()
 );
 
 export const deleteCommentSuccessAction = createAction(
   '[COMMENTS] delete comment success',
-  props<{ id: string }>()
+  props<{ id: string,postId:string }>()
 );
 
 export const clearCommentsAction = createAction(

@@ -8,7 +8,7 @@ import {
   ChangeDetectorRef,
 } from '@angular/core';
 import { Post } from 'src/app/shared/interfaces/post.interface';
-import { FormGroup, FormBuilder } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Location } from '@angular/common';
 import { CreatePost } from '../../../../shared/interfaces/post.interface';
 import { OnInit } from '@angular/core';
@@ -16,31 +16,41 @@ import { AppState } from '../../../../store/app.reducers';
 import { select, Store } from '@ngrx/store';
 import { getCategoriesSelector } from '../../../../store/categories/category.selectors';
 import { Subject, takeUntil } from 'rxjs';
+import { ImagesService } from '../../../../shared/services/images.service';
 
 @Component({
   selector: 'app-post-form',
   templateUrl: './post-form.component.html',
   styleUrls: ['./post-form.component.scss'],
 })
-export class PostFormComponent implements OnChanges,OnInit {
+export class PostFormComponent implements OnChanges, OnInit {
   @Input() public post!: Post;
 
   @Output() public submitted = new EventEmitter<CreatePost>();
 
   public form!: FormGroup;
 
-  public categories:{label:string,value:string}[] = [];
+  private imgUrl='';
+
+  public categories: { label: string; value: string }[] = [];
 
   private destroy$ = new Subject<void>();
 
-  constructor(private fb: FormBuilder, private location: Location,private store:Store<AppState>,private cdr:ChangeDetectorRef) {
+  constructor(
+    private fb: FormBuilder,
+    private location: Location,
+    private store: Store<AppState>,
+    private imagesService:ImagesService
+  ) {
     this.initForm();
   }
 
   public ngOnInit(): void {
-    this.store.pipe(select(getCategoriesSelector),takeUntil(this.destroy$)).subscribe(data=>{
-      this.categories = data.map(x=>({label:x.name,value:x.id}))
-    })
+    this.store
+      .pipe(select(getCategoriesSelector), takeUntil(this.destroy$))
+      .subscribe((data) => {
+        this.categories = data.map((x) => ({ label: x.name, value: x.id }));
+      });
   }
 
   public ngOnChanges(changes: SimpleChanges): void {
@@ -56,7 +66,7 @@ export class PostFormComponent implements OnChanges,OnInit {
     if (this.form.invalid) {
       return;
     }
-    this.submitted.emit(this.form.getRawValue());
+    this.submitted.emit({...this.form.getRawValue(),imgUrl:this.imgUrl});
   }
 
   public back(): void {
@@ -64,11 +74,15 @@ export class PostFormComponent implements OnChanges,OnInit {
     this.location.back();
   }
 
+  public upload(event:any){
+    this.imgUrl = this.imagesService.upload(event)
+  };
+
   private initForm(): void {
     this.form = this.fb.group({
-      title: '',
-      content: '',
-      categories: [],
+      title: ['', [Validators.required]],
+      content: ['', [Validators.required]],
+      categories: [[], [Validators.required]],
     });
   }
 }

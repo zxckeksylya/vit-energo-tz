@@ -1,7 +1,16 @@
 import { ActionReducerMap, MetaReducer } from '@ngrx/store';
 import { environment } from 'src/environments/environment';
 import { authReducer, AuthState, AUTH_FEATURE_KEY } from './auth/auth.reducers';
-import { COMMENTS_FEATURE_KEY, CommentState, commentReducer } from './comments/comments.reducers';
+import {
+  COMMENTS_FEATURE_KEY,
+  CommentState,
+  commentReducer,
+} from './comments/comments.reducers';
+import {
+  LIKES_FEATURE_KEY,
+  LikesState,
+  likesReducer,
+} from './likes/likes.reducers';
 import {
   CATEGORIES_FEATURE_KEY,
   CategoryState,
@@ -17,14 +26,16 @@ export interface AppState {
   [AUTH_FEATURE_KEY]: AuthState;
   [POSTS_FEATURE_KEY]: PostsState;
   [CATEGORIES_FEATURE_KEY]: CategoryState;
-  [COMMENTS_FEATURE_KEY]:CommentState
+  [COMMENTS_FEATURE_KEY]: CommentState;
+  [LIKES_FEATURE_KEY]: LikesState;
 }
 
 export const reducers: ActionReducerMap<AppState> = {
   [AUTH_FEATURE_KEY]: authReducer,
   [POSTS_FEATURE_KEY]: postsReducer,
   [CATEGORIES_FEATURE_KEY]: categoryReducer,
-  [COMMENTS_FEATURE_KEY]:commentReducer
+  [COMMENTS_FEATURE_KEY]: commentReducer,
+  [LIKES_FEATURE_KEY]: likesReducer,
 };
 
 export const metaReducers: MetaReducer<AppState>[] = !environment.production

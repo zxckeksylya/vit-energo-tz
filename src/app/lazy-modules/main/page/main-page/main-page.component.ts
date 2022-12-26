@@ -4,6 +4,8 @@ import { AppState } from '../../../../store/app.reducers';
 import { initCategoriesStoreAction } from '../../../../store/categories/category.actions';
 import { initPostsStoreAction } from '../../../../store/posts/posts.actions';
 import { initCommentsStoreAction } from '../../../../store/comments/comments.action';
+import { initUserAction } from 'src/app/store/auth/auth.actions';
+import { initLikesStoreAction } from '../../../../store/likes/likes.actions';
 
 @Component({
   selector: 'app-main-page',
@@ -22,5 +24,8 @@ export class MainPageComponent implements OnInit {
   private initData(): void {
     this.store.dispatch(initCategoriesStoreAction());
     this.store.dispatch(initCommentsStoreAction());
+    this.store.dispatch(initPostsStoreAction());
+    this.store.dispatch(initUserAction());
+    this.store.dispatch(initLikesStoreAction())
   }
 }

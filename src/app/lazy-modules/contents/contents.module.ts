@@ -10,9 +10,10 @@ import { ContentsPageComponent } from './pages/contents-page/contents-page.compo
 import { ButtonModule } from '../../shared/components/button/button.module';
 import { TextareaModule } from '../../shared/components/controls/textarea/textarea.module';
 import { CommentCardComponent } from './components/comment-card/comment-card.component';
+import { LikeCardComponent } from './components/like-card/like-card.component';
 
 @NgModule({
-  declarations: [ContentsPageComponent, PostCardComponent, CommentCardComponent],
+  declarations: [ContentsPageComponent, PostCardComponent, CommentCardComponent, LikeCardComponent],
   imports: [
     CommonModule,
     ContentsRoutingModule,

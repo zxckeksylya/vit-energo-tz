@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { select, Store } from '@ngrx/store';
 import { Subject, takeUntil } from 'rxjs';
 import { Comment } from 'src/app/shared/interfaces/comment.interface';
+import { createCommentAction, deleteCommentAction, updateCommentAction } from 'src/app/store/comments/comments.action';
 import { AppState } from '../../../../store/app.reducers';
 import { getCommentById, isChangebleCommentByIdSelector } from '../../../../store/comments/comments.selectors';
 
@@ -13,6 +14,8 @@ import { getCommentById, isChangebleCommentByIdSelector } from '../../../../stor
 })
 export class CommentCardComponent implements OnInit, OnDestroy {
   @Input() public commentId!: string;
+
+  @Input() public postId!:string;
 
   public comment!: Comment;
 
@@ -44,11 +47,18 @@ export class CommentCardComponent implements OnInit, OnDestroy {
   }
 
   public onSubmit():void {
-    this.change = true
+    if(this.commentForm.invalid){
+      return;
+    }
+    this.store.dispatch(updateCommentAction({id:this.commentId,comment:this.commentForm.getRawValue()}))
   }
 
   public onChange():void{
     this.change = false
+  }
+
+  public deleteComment():void{
+    this.store.dispatch(deleteCommentAction({id:this.commentId,postId:this.postId}))
   }
 
   private initForm():void{

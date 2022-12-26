@@ -22,7 +22,10 @@ import {
   updatePostSuccessAction,
 } from './posts.actions';
 import { getIsInitPostsSelector, getPostByIdSelector } from './posts.selects';
-import { createCommentSuccessAction } from '../comments/comments.action';
+import { createCommentSuccessAction, deleteCommentSuccessAction } from '../comments/comments.action';
+import { ImagesService } from 'src/app/shared/services/images.service';
+import { createLikeAction } from '../likes/likes.actions';
+import { lustCreatedLikeIdSelector } from '../likes/likes.selectors';
 
 @Injectable()
 export class PostEffects {
@@ -69,12 +72,14 @@ export class PostEffects {
       switchMap((post) =>
         this.store.pipe(
           select(userSelector),
-          map((user) => ({
-            createUserId: user!.uid,
-            ...post.post,
-            likesIds: [],
-            comments: [],
-          }))
+          concatMap((user) => {
+            this.store.dispatch(createLikeAction({like:{likes:[user!.uid]}}))
+            return this.store.pipe(select(lustCreatedLikeIdSelector),map(likeId=>({
+              createUserId: user!.uid,
+              ...post.post,
+              likesIds: likeId,
+              comments: [],
+            })))})
         )
       ),
       switchMap((post) => this.postService.createPost(post)),
@@ -122,6 +127,25 @@ export class PostEffects {
     )
   );
 
+  public deleteComment$ = createEffect(()=>this.actions$.pipe(
+    ofType(deleteCommentSuccessAction),
+    concatMap((action) =>
+    this.store.pipe(
+      take(1),
+      select((state) => getPostByIdSelector(state, { id: action.postId })),
+      map((post) => {
+        const newCommentsArr = [...post.comments];
+        const index = newCommentsArr.indexOf(action.id);
+        newCommentsArr.splice(index,1);
+        return updatePostAction({
+          id: action.postId,
+          post: { ...post, comments: newCommentsArr },
+        });
+      })
+    )
+  )
+  ))
+
   public deletePost$ = createEffect(() =>
     this.actions$.pipe(
       ofType(deletePostAction),
@@ -133,51 +157,9 @@ export class PostEffects {
     )
   );
 
-  public changePostLike$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType(changeLikePost),
-      switchMap((action) =>
-        this.store.pipe(
-          select((state) => getPostByIdSelector(state, { id: action.id })),
-          concatMap((post) =>
-            this.store.pipe(
-              select(userSelector),
-              map((user) => {
-                if (post.likesIds.includes(user!.uid)) {
-                  const indexOfLike = post.likesIds.indexOf(user!.uid);
-                  const newLikesArr = [...post.likesIds];
-                  newLikesArr.splice(indexOfLike, 1);
-                  const newPost: Post = {
-                    ...post,
-                    likesIds: newLikesArr,
-                  };
-                  return changeLikePostSuccess({
-                    id: action.id,
-                    post: newPost,
-                  });
-                } else {
-                  const newLikesArr = [...post.likesIds];
-                  newLikesArr.push(user!.uid);
-                  const newPost: Post = {
-                    ...post,
-                    likesIds: newLikesArr,
-                  };
-                  return changeLikePostSuccess({
-                    id: action.id,
-                    post: newPost,
-                  });
-                }
-              })
-            )
-          )
-        )
-      )
-    )
-  );
-
   constructor(
     private actions$: Actions,
     private postService: PostsService,
-    private store: Store<AppState>
+    private store: Store<AppState>,
   ) {}
 }
